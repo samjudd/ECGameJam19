@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="main.cs" />
+    <Compile Include="menu.cs" />
     <Compile Include="player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
