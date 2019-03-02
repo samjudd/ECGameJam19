@@ -62,7 +62,9 @@ tracks/3/keys = {
 "values": [ 64.0, 73.0, 82.0, 91.0, 100.0, 64.0 ]
 }
 
-[node name="pulse" type="Area2D"]
+[node name="pulse" type="Area2D" index="0" groups=[
+"attacks",
+]]
 
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )

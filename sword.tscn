@@ -2,7 +2,9 @@
 
 [ext_resource path="res://sprites/sword.png" type="Texture" id=1]
 
-[node name="sword" type="Area2D"]
+[node name="sword" type="Area2D" index="0" groups=[
+"attacks",
+]]
 
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )

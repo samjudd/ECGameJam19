@@ -84,7 +84,9 @@ tracks/2/keys = {
 "values": [ true, false ]
 }
 
-[node name="player" type="KinematicBody2D" index="0"]
+[node name="player" type="KinematicBody2D" index="0" groups=[
+"player",
+]]
 
 input_pickable = false
 collision_layer = 1
