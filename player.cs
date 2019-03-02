@@ -5,7 +5,7 @@ public class player : KinematicBody2D
 {
     public float _speed = 75f;
     Vector2 _velocity = new Vector2();
-    enum state {NORMAL, SWORD_ATTACK, SWORDSHIELD_ATTACK};
+    enum state {NORMAL, SWORD_ATTACK, SWORDSHIELD_ATTACK, SHIELD_ATTACK};
     state _state = state.NORMAL;
     float _attack_time = 0;
 
@@ -47,8 +47,14 @@ public class player : KinematicBody2D
         else if (Input.IsActionJustPressed("swordshield_attack") && _state == state.NORMAL)
         {
             _state = state.SWORDSHIELD_ATTACK;
+            ((AnimationPlayer)this.GetNode("AnimationPlayer")).Play("swordshield_attack");
+        }
+        else if (Input.IsActionJustPressed("shield_attack") && _state == state.NORMAL)
+        {
+            _state = state.SHIELD_ATTACK;
             ((AnimationPlayer)this.GetNode("pulse/AnimationPlayer")).Play("pulse");
         }
+
     }
 
     private void DoAttacks(float delta)
@@ -69,8 +75,20 @@ public class player : KinematicBody2D
                     _velocity = new Vector2();
                 }
                 break;
-            case state.SWORDSHIELD_ATTACK:
+            case state.SHIELD_ATTACK:
                 // go back to normal after pulse
+                if(_attack_time <= 0.3)
+                {
+                    _attack_time += delta;
+                }
+                else
+                {
+                    _state = state.NORMAL;
+                    _attack_time = 0;
+                }
+                break;
+            case state.SWORDSHIELD_ATTACK:
+                // go back to normal after spin attack
                 if(_attack_time <= 0.3)
                 {
                     _attack_time += delta;

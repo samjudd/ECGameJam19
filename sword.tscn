@@ -23,8 +23,9 @@ _sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="Sprite" type="Sprite" parent="." index="1"]
 
-scale = Vector2( 0.976135, 1 )
+position = Vector2( 0, 50 )
 texture = ExtResource( 1 )
+flip_v = true
 _sections_unfolded = [ "Offset", "Region", "Transform", "Visibility" ]
 
 
