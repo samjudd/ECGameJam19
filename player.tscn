@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://player.cs" type="Script" id=1]
 [ext_resource path="res://sprites/player.png" type="Texture" id=2]
 [ext_resource path="res://sword.tscn" type="PackedScene" id=3]
+[ext_resource path="res://pulse.tscn" type="PackedScene" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -40,7 +41,7 @@ tracks/1/keys = {
 "values": [ true, false ]
 }
 
-[node name="player" type="KinematicBody2D" index="0"]
+[node name="player" type="KinematicBody2D"]
 
 input_pickable = false
 collision_layer = 1
@@ -77,5 +78,10 @@ playback_default_blend_time = 0.0
 playback_speed = 1.0
 anims/sword_attack = SubResource( 2 )
 blend_times = [  ]
+
+[node name="pulse" parent="." index="4" instance=ExtResource( 4 )]
+
+visible = false
+monitoring = false
 
 

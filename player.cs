@@ -5,7 +5,7 @@ public class player : KinematicBody2D
 {
     public float _speed = 75f;
     Vector2 _velocity = new Vector2();
-    enum state {NORMAL, SWORD_ATTACK};
+    enum state {NORMAL, SWORD_ATTACK, SWORDSHIELD_ATTACK};
     state _state = state.NORMAL;
     float _attack_time = 0;
 
@@ -39,10 +39,15 @@ public class player : KinematicBody2D
         _velocity = _velocity.Normalized() * _speed;
 
         // check for attacks, do attack if there is one
-        if (Input.IsActionJustPressed("sword_attack"))
+        if (Input.IsActionJustPressed("sword_attack") && _state ==  state.NORMAL)
         {
             _state = state.SWORD_ATTACK;
             ((AnimationPlayer)this.GetNode("AnimationPlayer")).Play("sword_attack");
+        }
+        else if (Input.IsActionJustPressed("swordshield_attack") && _state == state.NORMAL)
+        {
+            _state = state.SWORDSHIELD_ATTACK;
+            ((AnimationPlayer)this.GetNode("pulse/AnimationPlayer")).Play("pulse");
         }
     }
 
@@ -54,7 +59,7 @@ public class player : KinematicBody2D
                 // dash at triple speed for 0.5 seconds with sword out
                 if (_attack_time <= 0.3)
                 {
-                    _velocity = this.Transform.y * _speed * 3.0f;
+                    _velocity = this.Transform.y * _speed * 4.0f;
                     _attack_time += delta;
                 }
                 else
@@ -62,6 +67,18 @@ public class player : KinematicBody2D
                     _state = state.NORMAL;
                     _attack_time = 0;
                     _velocity = new Vector2();
+                }
+                break;
+            case state.SWORDSHIELD_ATTACK:
+                // go back to normal after pulse
+                if(_attack_time <= 0.3)
+                {
+                    _attack_time += delta;
+                }
+                else
+                {
+                    _state = state.NORMAL;
+                    _attack_time = 0;
                 }
                 break;
         }
