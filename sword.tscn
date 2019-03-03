@@ -6,6 +6,7 @@
 "attacks",
 ]]
 
+position = Vector2( -0.581116, 0 )
 input_pickable = false
 gravity_vec = Vector2( 0, 1 )
 gravity = 0.0
@@ -13,12 +14,13 @@ linear_damp = 0.0
 angular_damp = 0.0
 audio_bus_override = false
 audio_bus_name = "Master"
-_sections_unfolded = [ "Pickable", "Transform" ]
+_sections_unfolded = [ "Audio Bus", "Collision", "Pickable", "Transform" ]
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." index="0"]
 
 visible = false
-position = Vector2( 0.1, 0 )
+position = Vector2( 0, 50 )
+rotation = 3.14159
 build_mode = 1
 polygon = PoolVector2Array( 9.78705, 50.2321, -9.82934, 50.0441, -9.94807, -32.7643, 0.121142, -49.9167, 9.98202, -32.6254 )
 _sections_unfolded = [ "Transform", "Visibility" ]

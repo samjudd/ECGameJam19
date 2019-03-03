@@ -35,6 +35,18 @@ tracks/1/keys = {
 "update": 1,
 "values": [ true, false ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("sword:monitorable")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
 
 [sub_resource type="Animation" id=2]
 
@@ -73,6 +85,18 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("spinsword:monitorable")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
 "times": PoolRealArray( 0, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
@@ -84,7 +108,7 @@ tracks/2/keys = {
 custom_solver_bias = 0.0
 radius = 50.0
 
-[node name="player" type="KinematicBody2D" groups=[
+[node name="player" type="KinematicBody2D" index="0" groups=[
 "player",
 ]]
 
@@ -100,7 +124,8 @@ _sections_unfolded = [ "Transform" ]
 visible = false
 position = Vector2( 0, 70 )
 monitoring = false
-_sections_unfolded = [ "Pickable", "Transform", "Visibility", "Z Index" ]
+monitorable = false
+_sections_unfolded = [ "Audio Bus", "Collision", "Pickable", "Transform", "Visibility", "Z Index" ]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
 
@@ -115,16 +140,12 @@ blend_times = [  ]
 
 [node name="pulse" parent="." index="2" instance=ExtResource( 3 )]
 
-visible = false
-monitoring = false
 _sections_unfolded = [ "Pickable", "Transform", "Visibility" ]
 
 [node name="spinsword" parent="." index="3" instance=ExtResource( 2 )]
 
 visible = false
-rotation = 1.74846e-007
-monitoring = false
-_sections_unfolded = [ "Pickable", "Transform", "Visibility" ]
+_sections_unfolded = [ "Audio Bus", "Collision", "Pickable", "Transform", "Visibility" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="4"]
 

@@ -22,8 +22,8 @@ public class enemy : KinematicBody2D
 
     private void OnAreaEntered(Area2D area)
     {
-      area.GetGroups();
-      if ("attacks" )
-      GD.Print("Attack Registered");
+		if (area.GetGroups().Contains("attacks")) {
+			QueueFree();
+		}
     }
 }
