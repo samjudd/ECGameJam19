@@ -20,7 +20,7 @@ public class menu : MarginContainer
         // Update game logic here.
 		if (Input.IsActionPressed("start_game"))
         {
-			GetTree().ChangeScene("res://main.tscn");
+			GetTree().ChangeScene("res://game.tscn");
         }
         
     }
