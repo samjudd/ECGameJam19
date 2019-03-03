@@ -30,6 +30,7 @@ _sections_unfolded = [ "Visibility" ]
 
 [node name="Area2D" type="Area2D" parent="." index="2"]
 
+editor/display_folded = true
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )
 gravity = 98.0
@@ -43,5 +44,24 @@ audio_bus_name = "Master"
 visible = false
 shape = SubResource( 1 )
 _sections_unfolded = [ "Visibility" ]
+
+[node name="health" type="ColorRect" parent="." index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -35.0
+margin_top = -65.0
+margin_right = 35.0
+margin_bottom = -55.0
+rect_pivot_offset = Vector2( 35, 5 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+color = Color( 1, 0, 0, 1 )
+_sections_unfolded = [ "Anchor", "Focus", "Grow Direction", "Hint", "Margin", "Material", "Mouse", "Rect", "Size Flags", "Theme", "Visibility" ]
 
 
