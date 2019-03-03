@@ -4,7 +4,7 @@ using System;
 public class player : KinematicBody2D
 {
     [Signal]
-    public delegate void HealthChanged(float playerHealth);
+    public delegate void HealthChanged(int playerHealth);
     [Signal]
     public delegate void Died();
     public float _speed = 75f;
@@ -13,11 +13,11 @@ public class player : KinematicBody2D
     state _state = state.NORMAL;
     float _attack_time = 0;
     Vector2 _target = new Vector2();
-    public const float MaxHealth = 100.0f;
-    private float _player_health = MaxHealth;
-    private float _attack_flow = 0.0f;
-    private float _shield_flow = 0.0f;
-    private float _boots_flow = 0.0f;
+    public const int MaxHealth = 100;
+    private int _player_health = MaxHealth;
+    private int _attack_flow = 0;
+    private int _shield_flow = 0;
+    private int _boots_flow = 0;
 
     public override void _Ready()
     {
@@ -75,6 +75,7 @@ public class player : KinematicBody2D
             _target = this.Position  + _velocity.Normalized() * 250;
 			SetCollisionLayerBit(0, false);
 			SetCollisionMaskBit(0, false);
+            ((Area2D)this.GetNode("Area2D")).Monitoring = false;
         }
 
     }
@@ -132,6 +133,7 @@ public class player : KinematicBody2D
                     _state = state.NORMAL;
                     _attack_time = 0;
                     _target = new Vector2();
+                    ((Area2D)this.GetNode("Area2D")).Monitoring = true;
 					SetCollisionLayerBit(0, true);
 					SetCollisionMaskBit(0, true);
                 }
@@ -157,11 +159,11 @@ public class player : KinematicBody2D
     {
         if (body.GetGroups().Contains("enemies"))
         {
-            ChangeHealth(-10.0f);
+            ChangeHealth(-10);
         }
     }
 
-    private void ChangeHealth(float delta)
+    private void ChangeHealth(int delta)
     {
         _player_health += delta;
         this.EmitSignal(nameof(HealthChanged), _player_health);
