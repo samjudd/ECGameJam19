@@ -6,9 +6,19 @@
 [node name="main" type="Node2D"]
 
 script = ExtResource( 1 )
+_sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="player" parent="." index="0" instance=ExtResource( 2 )]
 
 position = Vector2( 384.644, 278.022 )
+
+[node name="enemy_spawner" type="Timer" parent="." index="1"]
+
+process_mode = 1
+wait_time = 5.0
+one_shot = false
+autostart = true
+
+[connection signal="timeout" from="enemy_spawner" to="." method="_on_enemy_spawner_timeout"]
 
 

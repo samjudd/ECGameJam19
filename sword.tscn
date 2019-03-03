@@ -2,7 +2,7 @@
 
 [ext_resource path="res://sprites/sword.png" type="Texture" id=1]
 
-[node name="sword" type="Area2D" index="0" groups=[
+[node name="sword" type="Area2D" groups=[
 "attacks",
 ]]
 
