@@ -137,6 +137,8 @@ _sections_unfolded = [ "Pickable", "Transform", "Visibility" ]
 [node name="spinsword" parent="." index="2" instance=ExtResource( 3 )]
 
 visible = false
+monitoring = false
+monitorable = false
 _sections_unfolded = [ "Audio Bus", "Collision", "Pickable", "Transform", "Visibility" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="3"]
