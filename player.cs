@@ -106,9 +106,10 @@ public class player : KinematicBody2D
                 }
                 break;
             case state.BOOTS_ATTACK:
-                if (this.Position.DistanceTo(_target) > 20)
+                if (this.Position.DistanceTo(_target) > 20 && _attack_time < 0.5)
                 {
                     _velocity = (_target - this.Position).Normalized() * _speed * 10.0f;
+                    _attack_time += delta;
                 }
                 else
                 {
