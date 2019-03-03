@@ -1,13 +1,17 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://player.cs" type="Script" id=1]
 [ext_resource path="res://pulse.tscn" type="PackedScene" id=2]
 [ext_resource path="res://sword.tscn" type="PackedScene" id=3]
 [ext_resource path="res://sprites/player.png" type="Texture" id=4]
 
-[sub_resource type="Animation" id=1]
+[sub_resource type="CircleShape2D" id=1]
 
-resource_name = "sword_attack"
+custom_solver_bias = 0.0
+radius = 51.0
+
+[sub_resource type="Animation" id=2]
+
 length = 0.3
 loop = false
 step = 0.05
@@ -48,9 +52,8 @@ tracks/2/keys = {
 "values": [ true, false ]
 }
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=3]
 
-resource_name = "swordshield_attack"
 length = 0.3
 loop = false
 step = 0.03
@@ -103,7 +106,7 @@ tracks/3/keys = {
 "values": [ true, false ]
 }
 
-[sub_resource type="CircleShape2D" id=3]
+[sub_resource type="CircleShape2D" id=4]
 
 custom_solver_bias = 0.0
 radius = 50.0
@@ -119,33 +122,49 @@ collision/safe_margin = 0.08
 script = ExtResource( 1 )
 _sections_unfolded = [ "Collision", "Transform" ]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="0"]
+[node name="Area2D" type="Area2D" parent="." index="0"]
+
+visible = false
+input_pickable = false
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+audio_bus_override = false
+audio_bus_name = "Master"
+_sections_unfolded = [ "Visibility" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" index="0"]
+
+shape = SubResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
 
 root_node = NodePath("..")
 autoplay = ""
 playback_process_mode = 1
 playback_default_blend_time = 0.0
 playback_speed = 1.0
-anims/sword_attack = SubResource( 1 )
-anims/swordshield_attack = SubResource( 2 )
+anims/sword_attack = SubResource( 2 )
+anims/swordshield_attack = SubResource( 3 )
 blend_times = [  ]
 
-[node name="pulse" parent="." index="1" instance=ExtResource( 2 )]
+[node name="pulse" parent="." index="2" instance=ExtResource( 2 )]
 
 _sections_unfolded = [ "Pickable", "Transform", "Visibility" ]
 
-[node name="spinsword" parent="." index="2" instance=ExtResource( 3 )]
+[node name="spinsword" parent="." index="3" instance=ExtResource( 3 )]
 
 visible = false
 _sections_unfolded = [ "Audio Bus", "Collision", "Pickable", "Transform", "Visibility" ]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="4"]
 
 visible = false
-shape = SubResource( 3 )
+shape = SubResource( 4 )
 _sections_unfolded = [ "Pause", "Visibility" ]
 
-[node name="RotateChild" type="Node2D" parent="." index="4"]
+[node name="RotateChild" type="Node2D" parent="." index="5"]
 
 [node name="Sprite" type="Sprite" parent="RotateChild" index="0"]
 
