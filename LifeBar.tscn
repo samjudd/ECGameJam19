@@ -21,13 +21,11 @@ margin_right = 50.0
 
 margin_left = 50.0
 margin_right = -5.0
-text = "0"
 _sections_unfolded = [ "Rect", "custom_fonts" ]
 
 [node name="Gauge" parent="." index="1"]
 
 margin_left = 122.0
 margin_right = 518.0
-value = 0.0
 
 
