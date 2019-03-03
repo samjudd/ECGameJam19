@@ -9,8 +9,8 @@ public class enemy : KinematicBody2D
 
     public override void _Ready()
     {
-        // Called every time the node is added to the scene.
-        // Initialization here
+      // connect to area entered signal
+      this.GetNode("Area2D").Connect("area_entered", this, nameof(OnAreaEntered));
     }
 
     public override void _Process(float delta)
@@ -18,5 +18,12 @@ public class enemy : KinematicBody2D
 		KinematicBody2D player = (KinematicBody2D)GetParent().GetNode("player");
 		Vector2 directionToPlayer = (player.Position - this.Position).Normalized();
 		MoveAndSlide(speed*directionToPlayer);
+    }
+
+    private void OnAreaEntered(Area2D area)
+    {
+      area.GetGroups();
+      if ("attacks" )
+      GD.Print("Attack Registered");
     }
 }
