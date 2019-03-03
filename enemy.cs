@@ -4,12 +4,13 @@ using System;
 public class enemy : KinematicBody2D
 {
     private int speed = 100;
-	  private int _health = 70;
+	private int knockbackSpeed = 1000;
+	private int _health = 70;
 
     public override void _Ready()
     {
-      // connect to area entered signal
-      this.GetNode("Area2D").Connect("area_entered", this, nameof(OnAreaEntered));
+		// connect to area entered signal
+		this.GetNode("Area2D").Connect("area_entered", this, nameof(OnAreaEntered));
     }
 
     public override void _Process(float delta)
@@ -38,8 +39,14 @@ public class enemy : KinematicBody2D
 					break;
 				case "pulse":
 					_health -= 1;
+					Knockback((player)GetNode("../player"));
 					break;
 			}
 		}
     }
+	
+	public void Knockback(player playerInstance) {
+		Vector2 directionToPlayer = (playerInstance.Position - this.Position).Normalized();
+		MoveAndSlide(-knockbackSpeed*directionToPlayer);
+	}
 }
