@@ -20,7 +20,6 @@ position = Vector2( 659.275, 157.335 )
 [node name="testwall2" parent="." index="2" instance=ExtResource( 3 )]
 
 position = Vector2( 151.54, 404.522 )
->>>>>>> 376bce8806f5465d433c7eda45827436356d72cd
 
 [node name="enemy_spawner" type="Timer" parent="." index="3"]
 
@@ -30,4 +29,5 @@ one_shot = false
 autostart = true
 
 [connection signal="timeout" from="enemy_spawner" to="." method="_on_enemy_spawner_timeout"]
+
 
