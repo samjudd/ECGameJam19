@@ -108,7 +108,7 @@ public class player : KinematicBody2D
                 }
                 break;
             case state.BOOTS_ATTACK:
-                if (_attack_time < 0.5)
+                if (_attack_time <= 0.5)
                 {
                     _velocity = this.GetRotateChild().Transform.y * _speed * 10.0f;
                     _attack_time += delta;
