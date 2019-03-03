@@ -40,7 +40,7 @@ public class player : KinematicBody2D
         _velocity = _velocity.Normalized() * _speed;
 
         // check for attacks, do attack if there is one
-        if (Input.IsActionJustPressed("sword_attack") && _state ==  state.NORMAL)
+        if (Input.IsActionJustPressed("sword_attack") && _state == state.NORMAL)
         {
             _state = state.SWORD_ATTACK;
             ((AnimationPlayer)this.GetNode("AnimationPlayer")).Play("sword_attack");
@@ -71,7 +71,7 @@ public class player : KinematicBody2D
                 // dash at 4x speed for 0.5 seconds with sword out
                 if (_attack_time <= 0.3)
                 {
-                    _velocity = this.Transform.y * _speed * 4.0f;
+                    _velocity = this.GetRotateChild().Transform.y * _speed * 4.0f;
                     _attack_time += delta;
                 }
                 else
@@ -126,7 +126,12 @@ public class player : KinematicBody2D
         MoveAndSlide(_velocity);
         if(_velocity.Length() != 0)
         {
-            this.Rotation += this.Transform.y.AngleTo(_velocity);
+			Node2D rotatedPlayer = this.GetRotateChild();
+			rotatedPlayer.Rotation += rotatedPlayer.Transform.y.AngleTo(_velocity);
         }
     }
+
+	private Node2D GetRotateChild() {
+		return (Node2D)GetNode("RotateChild");
+	}
 }
