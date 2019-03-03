@@ -4,7 +4,7 @@ using System;
 public class enemy : KinematicBody2D
 {
     private int speed = 100;
-	private int _health = 70;
+	  private int _health = 70;
 
     public override void _Ready()
     {

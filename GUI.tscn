@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://LifeBar.tscn" type="PackedScene" id=1]
-[ext_resource path="res://AttackBar.tscn" type="PackedScene" id=2]
-[ext_resource path="res://ShieldBar.tscn" type="PackedScene" id=3]
-[ext_resource path="res://BootsBar.tscn" type="PackedScene" id=4]
+[ext_resource path="res://GUI.cs" type="Script" id=1]
+[ext_resource path="res://LifeBar.tscn" type="PackedScene" id=2]
+[ext_resource path="res://AttackBar.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ShieldBar.tscn" type="PackedScene" id=4]
+[ext_resource path="res://BootsBar.tscn" type="PackedScene" id=5]
 
 [node name="GUI" type="MarginContainer"]
 
@@ -21,17 +22,27 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
+script = ExtResource( 1 )
 _sections_unfolded = [ "Rect" ]
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." index="0"]
+[node name="Tween" type="Tween" parent="." index="0"]
+
+repeat = false
+playback_process_mode = 1
+playback_speed = 1.0
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="Bars" type="HBoxContainer" parent="." index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 8.0
-margin_right = 984.0
-margin_bottom = 560.0
+margin_right = 1240.0
+margin_bottom = 680.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -41,14 +52,14 @@ size_flags_vertical = 1
 alignment = 0
 _sections_unfolded = [ "Size Flags" ]
 
-[node name="HealthBar" type="VBoxContainer" parent="HBoxContainer" index="0"]
+[node name="HealthBar" type="VBoxContainer" parent="Bars" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 508.0
-margin_bottom = 560.0
+margin_right = 518.0
+margin_bottom = 680.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -58,20 +69,21 @@ size_flags_vertical = 1
 alignment = 0
 _sections_unfolded = [ "Size Flags" ]
 
-[node name="LifeBar" parent="HBoxContainer/HealthBar" index="0" instance=ExtResource( 1 )]
+[node name="LifeBar" parent="Bars/HealthBar" index="0" instance=ExtResource( 2 )]
 
+margin_right = 518.0
 size_flags_vertical = 0
 _sections_unfolded = [ "Grow Direction", "Rect", "Size Flags", "Theme" ]
 
-[node name="CycleBars" type="VBoxContainer" parent="HBoxContainer" index="1"]
+[node name="CycleBars" type="VBoxContainer" parent="Bars" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 636.0
-margin_right = 976.0
-margin_bottom = 560.0
+margin_left = 892.0
+margin_right = 1232.0
+margin_bottom = 680.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -81,17 +93,17 @@ size_flags_vertical = 1
 alignment = 0
 _sections_unfolded = [ "Rect", "Size Flags" ]
 
-[node name="AttackBar" parent="HBoxContainer/CycleBars" index="0" instance=ExtResource( 2 )]
+[node name="AttackBar" parent="Bars/CycleBars" index="0" instance=ExtResource( 3 )]
 
 margin_right = 340.0
 
-[node name="ShieldBar" parent="HBoxContainer/CycleBars" index="1" instance=ExtResource( 3 )]
+[node name="ShieldBar" parent="Bars/CycleBars" index="1" instance=ExtResource( 4 )]
 
 margin_top = 44.0
 margin_right = 340.0
 margin_bottom = 84.0
 
-[node name="BootsBar" parent="HBoxContainer/CycleBars" index="2" instance=ExtResource( 4 )]
+[node name="BootsBar" parent="Bars/CycleBars" index="2" instance=ExtResource( 5 )]
 
 margin_top = 88.0
 margin_right = 340.0

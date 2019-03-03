@@ -4,4 +4,28 @@
 
 [node name="LifeBar" instance=ExtResource( 1 )]
 
+[node name="MarginContainer" parent="." index="0"]
+
+margin_right = 118.0
+
+[node name="Background" parent="MarginContainer" index="0"]
+
+margin_right = 118.0
+rect_min_size = Vector2( 110, 40 )
+
+[node name="Title" parent="MarginContainer/Background" index="0"]
+
+margin_right = 50.0
+
+[node name="Number" parent="MarginContainer/Background" index="1"]
+
+margin_left = 50.0
+margin_right = -5.0
+_sections_unfolded = [ "Rect", "custom_fonts" ]
+
+[node name="Gauge" parent="." index="1"]
+
+margin_left = 122.0
+margin_right = 518.0
+
 

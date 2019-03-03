@@ -3,12 +3,26 @@ using System;
 
 public class player : KinematicBody2D
 {
+    [Signal]
+    public delegate void HealthChanged(float playerHealth);
+    [Signal]
+    public delegate void Died();
     public float _speed = 75f;
     Vector2 _velocity = new Vector2();
     enum state {NORMAL, SWORD_ATTACK, SWORDSHIELD_ATTACK, SHIELD_ATTACK, BOOTS_ATTACK};
     state _state = state.NORMAL;
     float _attack_time = 0;
     Vector2 _target = new Vector2();
+    public const float MaxHealth = 100.0f;
+    private float _player_health = MaxHealth;
+    private float _attack_flow = 0.0f;
+    private float _shield_flow = 0.0f;
+    private float _boots_flow = 0.0f;
+
+    public override void _Ready()
+    {
+        this.GetNode("Area2D").Connect("body_entered", this, nameof(BodyEntered));
+    }
 
     public override void _PhysicsProcess(float delta)
     {
@@ -138,4 +152,18 @@ public class player : KinematicBody2D
 	private Node2D GetRotateChild() {
 		return (Node2D)GetNode("RotateChild");
 	}
+
+    private void BodyEntered(KinematicBody2D body)
+    {
+        if (body.GetGroups().Contains("enemies"))
+        {
+            ChangeHealth(-10.0f);
+        }
+    }
+
+    private void ChangeHealth(float delta)
+    {
+        _player_health += delta;
+        this.EmitSignal(nameof(HealthChanged), _player_health);
+    }
 }

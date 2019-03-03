@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="enemy.cs" />
     <Compile Include="game.cs" />
+    <Compile Include="GUI.cs" />
     <Compile Include="main.cs" />
     <Compile Include="menu.cs" />
     <Compile Include="player.cs" />
