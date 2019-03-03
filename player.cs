@@ -59,6 +59,8 @@ public class player : KinematicBody2D
         {
             _state = state.BOOTS_ATTACK;
             _target = this.Position  + _velocity.Normalized() * 250;
+			SetCollisionLayerBit(0, false);
+			SetCollisionMaskBit(0, false);
         }
 
     }
@@ -116,6 +118,8 @@ public class player : KinematicBody2D
                     _state = state.NORMAL;
                     _attack_time = 0;
                     _target = new Vector2();
+					SetCollisionLayerBit(0, true);
+					SetCollisionMaskBit(0, true);
                 }
                 break;
         }
