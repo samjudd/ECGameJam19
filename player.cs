@@ -5,9 +5,10 @@ public class player : KinematicBody2D
 {
     public float _speed = 75f;
     Vector2 _velocity = new Vector2();
-    enum state {NORMAL, SWORD_ATTACK, SWORDSHIELD_ATTACK, SHIELD_ATTACK};
+    enum state {NORMAL, SWORD_ATTACK, SWORDSHIELD_ATTACK, SHIELD_ATTACK, BOOTS_ATTACK};
     state _state = state.NORMAL;
     float _attack_time = 0;
+    Vector2 _target = new Vector2();
 
     public override void _PhysicsProcess(float delta)
     {
@@ -54,6 +55,11 @@ public class player : KinematicBody2D
             _state = state.SHIELD_ATTACK;
             ((AnimationPlayer)this.GetNode("pulse/AnimationPlayer")).Play("pulse");
         }
+        else if (Input.IsActionJustPressed("boots_attack") && _state == state.NORMAL)
+        {
+            _state = state.BOOTS_ATTACK;
+            _target = this.Position  + _velocity.Normalized() * 250;
+        }
 
     }
 
@@ -62,7 +68,7 @@ public class player : KinematicBody2D
         switch (_state)
         {
             case state.SWORD_ATTACK:
-                // dash at triple speed for 0.5 seconds with sword out
+                // dash at 4x speed for 0.5 seconds with sword out
                 if (_attack_time <= 0.3)
                 {
                     _velocity = this.Transform.y * _speed * 4.0f;
@@ -99,8 +105,20 @@ public class player : KinematicBody2D
                     _attack_time = 0;
                 }
                 break;
+            case state.BOOTS_ATTACK:
+                if (this.Position.DistanceTo(_target) > 20 && _attack_time < 0.5)
+                {
+                    _velocity = (_target - this.Position).Normalized() * _speed * 10.0f;
+                    _attack_time += delta;
+                }
+                else
+                {
+                    _state = state.NORMAL;
+                    _attack_time = 0;
+                    _target = new Vector2();
+                }
+                break;
         }
-
     }
 
     private void MoveAndRotate()

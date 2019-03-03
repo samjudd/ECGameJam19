@@ -11,7 +11,7 @@ config_version=3
 [application]
 
 config/name="ECGameJam19"
-run/main_scene="res://menu.tscn"
+run/main_scene="res://main.tscn"
 config/icon="res://icon.png"
 
 [input]
@@ -34,7 +34,7 @@ shield_attack=[ Object(InputEventKey,"resource_local_to_scene":false,"resource_n
  ]
 swordshield_attack=[ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
  ]
-start_game=[ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":32,"unicode":0,"echo":false,"script":null)
+boots_attack=[ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":69,"unicode":0,"echo":false,"script":null)
  ]
 
 [rendering]

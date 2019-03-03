@@ -1,14 +1,9 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://player.cs" type="Script" id=1]
-[ext_resource path="res://sprites/player.png" type="Texture" id=2]
-[ext_resource path="res://sword.tscn" type="PackedScene" id=3]
-[ext_resource path="res://pulse.tscn" type="PackedScene" id=4]
-
-[sub_resource type="CircleShape2D" id=1]
-
-custom_solver_bias = 0.0
-radius = 50.0
+[ext_resource path="res://sword.tscn" type="PackedScene" id=2]
+[ext_resource path="res://pulse.tscn" type="PackedScene" id=3]
+[ext_resource path="res://sprites/player.png" type="Texture" id=4]
 
 [sub_resource type="Animation" id=2]
 
@@ -84,6 +79,11 @@ tracks/2/keys = {
 "values": [ true, false ]
 }
 
+[sub_resource type="CircleShape2D" id=1]
+
+custom_solver_bias = 0.0
+radius = 50.0
+
 [node name="player" type="KinematicBody2D" groups=[
 "player",
 ]]
@@ -95,25 +95,14 @@ collision/safe_margin = 0.08
 script = ExtResource( 1 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="Sprite" type="Sprite" parent="." index="0"]
-
-texture = ExtResource( 2 )
-_sections_unfolded = [ "Transform" ]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
-
-visible = false
-shape = SubResource( 1 )
-_sections_unfolded = [ "Pause", "Visibility" ]
-
-[node name="sword" parent="." index="2" instance=ExtResource( 3 )]
+[node name="sword" parent="." index="0" instance=ExtResource( 2 )]
 
 visible = false
 position = Vector2( 0, 70 )
 monitoring = false
-_sections_unfolded = [ "Transform", "Visibility", "Z Index" ]
+_sections_unfolded = [ "Pickable", "Transform", "Visibility", "Z Index" ]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
 
 root_node = NodePath("..")
 autoplay = ""
@@ -124,16 +113,27 @@ anims/sword_attack = SubResource( 2 )
 anims/swordshield_attack = SubResource( 3 )
 blend_times = [  ]
 
-[node name="pulse" parent="." index="4" instance=ExtResource( 4 )]
+[node name="pulse" parent="." index="2" instance=ExtResource( 3 )]
 
 visible = false
 monitoring = false
 
-[node name="spinsword" parent="." index="5" instance=ExtResource( 3 )]
+[node name="spinsword" parent="." index="3" instance=ExtResource( 2 )]
 
 visible = false
-rotation = 6.28319
+rotation = 1.74846e-007
 monitoring = false
-_sections_unfolded = [ "Transform", "Visibility" ]
+_sections_unfolded = [ "Pickable", "Transform", "Visibility" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="4"]
+
+visible = false
+shape = SubResource( 1 )
+_sections_unfolded = [ "Pause", "Visibility" ]
+
+[node name="Sprite" type="Sprite" parent="." index="5"]
+
+texture = ExtResource( 4 )
+_sections_unfolded = [ "Transform" ]
 
 
