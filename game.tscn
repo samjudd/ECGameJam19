@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://game.cs" type="Script" id=1]
+[ext_resource path="res://GUI.tscn" type="PackedScene" id=2]
+[ext_resource path="res://player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://testwall.tscn" type="PackedScene" id=4]
+
+[node name="game" type="Node" index="0"]
+
+script = ExtResource( 1 )
+
+[node name="GUI" parent="." index="0" instance=ExtResource( 2 )]
+
+[node name="chars" type="Node2D" parent="." index="1"]
+
+position = Vector2( 20, 20 )
+
+[node name="player" parent="chars" index="0" instance=ExtResource( 3 )]
+
+position = Vector2( 463.366, 355.112 )
+
+[node name="testwall" parent="chars" index="1" instance=ExtResource( 4 )]
+
+position = Vector2( 1007.69, 489.208 )
+
+[node name="testwall2" parent="chars" index="2" instance=ExtResource( 4 )]
+
+position = Vector2( 146.69, 323.051 )
+
+[node name="enemy_spawner" type="Timer" parent="chars" index="3"]
+
+process_mode = 1
+wait_time = 5.0
+one_shot = false
+autostart = true
+
+
