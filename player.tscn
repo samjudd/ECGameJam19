@@ -222,7 +222,9 @@ _sections_unfolded = [ "Pause", "Visibility" ]
 
 [node name="RotateChild" type="Node2D" parent="." index="6"]
 
-[node name="spray_pulse" parent="RotateChild" index="0" instance=ExtResource( 5 )]
+[node name="spray_pulse" parent="RotateChild" index="0" groups=[
+"attacks",
+] instance=ExtResource( 5 )]
 
 visible = false
 position = Vector2( 0, 16 )

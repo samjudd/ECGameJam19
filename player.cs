@@ -116,7 +116,7 @@ public class player : KinematicBody2D
         }
 		else if (Input.IsActionJustPressed("bootsshield_attack") && GetCurrentState() == state.IDLE && this.ChangeState(state.SHIELDBOOTS))
 		{
-            this.Position = this.Position += this.GetRotateChild().Transform.y * GetSpeed() * -5.0f;
+            this.Position = this.Position += this.GetRotateChild().Transform.y * GetSpeed() * -2.0f;
 		}
 
     }
