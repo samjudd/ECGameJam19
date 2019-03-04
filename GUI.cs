@@ -45,12 +45,27 @@ public class GUI : MarginContainer
         // Get Boots Bar References
         _bootsBar = (TextureProgress) GetNode("Bars/CycleBars/BootsBar/Gauge");
         _bootsBarLabel = (Label) GetNode("Bars/CycleBars/BootsBar/MarginContainer/Background/Number");
+
+        // Connect to player Flow Changed Signals
+        player.Connect("SwordFlowChanged", this, nameof(onSwordFlowChanged));
+        player.Connect("ShieldFlowChanged", this, nameof(onShieldFlowChanged));
+        player.Connect("BootsFlowChanged", this, nameof(onBootsFlowChanged));
+
     }
 
     public override void _Process(float delta)
     {
         _healthBarLabel.Text = _animatedHealth.ToString();
         _healthBar.Value = _animatedHealth;
+
+        _swordBarLabel.Text = _animatedSword.ToString();
+        _swordBar.Value = _animatedSword;
+
+        _shieldBarLabel.Text = _animatedShield.ToString();
+        _shieldBar.Value = _animatedShield;
+
+        _bootsBarLabel.Text = _animatedBoots.ToString();
+        _bootsBar.Value = _animatedBoots;
     }
 
     public void UpdateHealth(int health)    
@@ -58,8 +73,38 @@ public class GUI : MarginContainer
         _tween.InterpolateProperty(this, "_animatedHealth", _animatedHealth, health, 0.6f, Tween.TransitionType.Linear, Tween.EaseType.In);
     }
 
+    public void UpdateSwordFlow(int swordFlow)    
+    {
+        _tween.InterpolateProperty(this, "_animatedSword", _animatedSword, swordFlow, 0.6f, Tween.TransitionType.Linear, Tween.EaseType.In);
+    }
+
+    public void UpdateShieldFlow(int shieldFlow)    
+    {
+        _tween.InterpolateProperty(this, "_animatedShield", _animatedShield, shieldFlow, 0.6f, Tween.TransitionType.Linear, Tween.EaseType.In);
+    }
+
+    public void UpdateBootsFlow(int bootsFlow)    
+    {
+        _tween.InterpolateProperty(this, "_animatedBoots", _animatedBoots, bootsFlow, 0.6f, Tween.TransitionType.Linear, Tween.EaseType.In);
+    }
+
     private void onPlayerHealthChanged(int playerHealth)
     {
         UpdateHealth(playerHealth);
+    }
+
+    private void onSwordFlowChanged(int swordFlow)
+    {
+        UpdateSwordFlow(swordFlow);
+    }
+
+    private void onShieldFlowChanged(int shieldFlow)
+    {
+        UpdateShieldFlow(shieldFlow);
+    }
+
+    private void onBootsFlowChanged(int bootsFlow)
+    {
+        UpdateBootsFlow(bootsFlow);
     }
 }

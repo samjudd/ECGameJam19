@@ -1,23 +1,63 @@
 using Godot;
 using System;
+using System.Linq;
 
 public class player : KinematicBody2D
 {
     [Signal]
     public delegate void HealthChanged(int playerHealth);
     [Signal]
-    public delegate void Died();
+    public delegate void SwordFlowChanged(int swordFlow);
+    [Signal]
+    public delegate void ShieldFlowChanged(int shieldFlow);
+    [Signal]
+    public delegate void BootsFlowChanged(int bootsFlow);
+    [Signal]
+    public delegate void PlayerDied();
     public float _speed = 75f;
     Vector2 _velocity = new Vector2();
-    enum state {NORMAL, SWORD_ATTACK, SWORDSHIELD_ATTACK, SHIELD_ATTACK, BOOTS_ATTACK};
-    state _state = state.NORMAL;
-    float _attack_time = 0;
+    enum state {IDLE, COMBO, TRIP, SWORD, SWORDSHIELD, SHIELD, SHIELDBOOTS, BOOTS, SWORDBOOTS};
+    float _attackTime = 0;
+    float _flowTime = 0;
     Vector2 _target = new Vector2();
     public const int MaxHealth = 100;
-    private int _player_health = MaxHealth;
-    private int _attack_flow = 0;
-    private int _shield_flow = 0;
-    private int _boots_flow = 0;
+    private int _playerHealth = MaxHealth;
+    private int _swordFlow = 0;
+    private int _shieldFlow = 0;
+    private int _bootsFlow = 0;
+    private state[] _stateHistory = new state[5] {state.IDLE, state.IDLE, state.IDLE, state.IDLE, state.IDLE};
+    private state[] _attacks = new state[6] {state.SWORD, state.SWORDSHIELD, state.SHIELD, state.SHIELDBOOTS, state.BOOTS, state.SWORDBOOTS};
+    private Dictionary<state, state[]> _validCombos = new Dictionary<state, state[]>()
+    {
+        {state.SWORD, new state[]{state.SWORDSHIELD, state.IDLE}},
+        {state.SWORDSHIELD, new state[]{state.SHIELD, state.SWORDBOOTS, state.IDLE}},
+        {state.SHIELD, new state[]{state.SHIELDBOOTS, state.IDLE, state.SHIELD}},
+        {state.SHIELDBOOTS, new state[]{state.BOOTS, state.SWORDSHIELD, state.IDLE}},
+        {state.BOOTS, new state[]{state.SWORDBOOTS, state.IDLE}},
+        {state.SWORDBOOTS, new state[]{state.SWORD, state.SHIELDBOOTS, state.IDLE}}
+    };
+
+    private state[][] _swordCombos = new state[][]
+    {
+        new state[] {state.SWORD, state.COMBO, state.SWORDSHIELD, state.COMBO, state.SWORDBOOTS},
+        new state[] {state.SWORDBOOTS, state.COMBO, state.SWORD, state.COMBO, state.SWORDSHIELD},
+        new state[] {state.SWORDSHIELD, state.COMBO, state.SWORDBOOTS, state.COMBO, state.SWORD}
+    }; 
+
+    private state[][] _shieldCombos = new state[][]
+    {
+        new state[] {state.SHIELD, state.COMBO, state.SHIELD, state.COMBO, state.SHIELD},
+        new state[] {state.SHIELD, state.COMBO, state.SHIELDBOOTS, state.COMBO, state.SWORDSHIELD},
+        new state[] {state.SHIELDBOOTS, state.COMBO, state.SWORDSHIELD, state.COMBO, state.SHIELD},
+        new state[] {state.SWORDSHIELD, state.COMBO, state.SHIELD, state.COMBO, state.SHIELDBOOTS}
+    }; 
+
+    private state[][] _bootsCombos = new state[][]
+    {
+        new state[] {state.BOOTS, state.COMBO, state.SWORDBOOTS, state.COMBO, state.SHIELDBOOTS},
+        new state[] {state.SWORDBOOTS, state.COMBO, state.SHIELDBOOTS, state.COMBO, state.BOOTS},
+        new state[] {state.SHIELDBOOTS, state.COMBO, state.BOOTS, state.COMBO, state.SWORDBOOTS}
+    };  
 
     public override void _Ready()
     {
@@ -28,6 +68,7 @@ public class player : KinematicBody2D
     {
         GetInput();
         DoAttacks(delta);
+        UpdateFlow(delta);
         MoveAndRotate();
     }
 
@@ -53,25 +94,21 @@ public class player : KinematicBody2D
         }
         _velocity = _velocity.Normalized() * _speed;
 
-        // check for attacks, do attack if there is one
-        if (Input.IsActionJustPressed("sword_attack") && _state == state.NORMAL)
+        // Checks for attack input, then if state is norma
+        if (Input.IsActionJustPressed("sword_attack") && this.ChangeState(state.SWORD))
         {
-            _state = state.SWORD_ATTACK;
             ((AnimationPlayer)this.GetNode("AnimationPlayer")).Play("sword_attack");
         }
-        else if (Input.IsActionJustPressed("swordshield_attack") && _state == state.NORMAL)
+        else if (Input.IsActionJustPressed("swordshield_attack") && this.ChangeState(state.SWORDSHIELD))
         {
-            _state = state.SWORDSHIELD_ATTACK;
             ((AnimationPlayer)this.GetNode("AnimationPlayer")).Play("swordshield_attack");
         }
-        else if (Input.IsActionJustPressed("shield_attack") && _state == state.NORMAL)
+        else if (Input.IsActionJustPressed("shield_attack") && this.ChangeState(state.SHIELD))
         {
-            _state = state.SHIELD_ATTACK;
             ((AnimationPlayer)this.GetNode("pulse/AnimationPlayer")).Play("pulse");
         }
-        else if (Input.IsActionJustPressed("boots_attack") && _state == state.NORMAL)
+        else if (Input.IsActionJustPressed("boots_attack") && this.ChangeState(state.BOOTS))
         {
-            _state = state.BOOTS_ATTACK;
             _target = this.Position  + _velocity.Normalized() * 250;
 			SetCollisionLayerBit(0, false);
 			SetCollisionMaskBit(0, false);
@@ -82,62 +119,99 @@ public class player : KinematicBody2D
 
     private void DoAttacks(float delta)
     {
-        switch (_state)
+        switch (GetCurrentState())
         {
-            case state.SWORD_ATTACK:
-                // dash at 4x speed for 0.5 seconds with sword out
-                if (_attack_time <= 0.3)
+            case state.COMBO:
+                if (_attackTime <= 3.0)
                 {
-                    _velocity = this.GetRotateChild().Transform.y * _speed * 4.0f;
-                    _attack_time += delta;
+                    _attackTime += delta;
                 }
                 else
                 {
-                    _state = state.NORMAL;
-                    _attack_time = 0;
+                    this.ChangeState(state.IDLE);
+                    _attackTime = 0;
+                }
+                break;
+            case state.TRIP:
+                if (_attackTime <= 0.5)
+                {
+                    _attackTime += delta;
+                }
+                else
+                {
+                    this.ChangeState(state.IDLE);
+                    _attackTime = 0;
+                }
+                break;
+            case state.SWORD:
+                // dash at 4x speed for 0.5 seconds with sword out
+                if (_attackTime <= 0.3)
+                {
+                    _velocity = this.GetRotateChild().Transform.y * _speed * 4.0f;
+                    _attackTime += delta;
+                }
+                else
+                {
+                    this.ChangeState(state.COMBO);
+                    _attackTime = 0;
                     _velocity = new Vector2();
                 }
                 break;
-            case state.SHIELD_ATTACK:
+            case state.SHIELD:
                 // go back to normal after pulse
-                if(_attack_time <= 0.3)
+                if(_attackTime <= 0.3)
                 {
-                    _attack_time += delta;
+                    _attackTime += delta;
                 }
                 else
                 {
-                    _state = state.NORMAL;
-                    _attack_time = 0;
+                    this.ChangeState(state.COMBO);
+                    _attackTime = 0;
                 }
                 break;
-            case state.SWORDSHIELD_ATTACK:
+            case state.SWORDSHIELD:
                 // go back to normal after spin attack
-                if(_attack_time <= 0.3)
+                if(_attackTime <= 0.3)
                 {
-                    _attack_time += delta;
+                    _attackTime += delta;
                 }
                 else
                 {
-                    _state = state.NORMAL;
-                    _attack_time = 0;
+                    this.ChangeState(state.COMBO);
+                    _attackTime = 0;
                 }
                 break;
-            case state.BOOTS_ATTACK:
-                if (_attack_time <= 0.5)
+            case state.BOOTS:
+                if (_attackTime <= 0.5)
                 {
                     _velocity = this.GetRotateChild().Transform.y * _speed * 10.0f;
-                    _attack_time += delta;
+                    _attackTime += delta;
                 }
                 else
                 {
-                    _state = state.NORMAL;
-                    _attack_time = 0;
+                    this.ChangeState(state.COMBO);
+                    _attackTime = 0;
                     _target = new Vector2();
                     ((Area2D)this.GetNode("Area2D")).Monitoring = true;
 					SetCollisionLayerBit(0, true);
 					SetCollisionMaskBit(0, true);
                 }
                 break;
+        }
+    }
+
+        private void UpdateFlow(float delta)
+    {
+        if (_flowTime < 3.0)
+        {
+            _flowTime += delta;
+        }
+        else
+        {
+            ChangeSwordFlow(-1);
+            ChangeShieldFlow(-1);
+            ChangeBootsFlow(-1);
+            _flowTime = 0;
         }
     }
 
@@ -149,6 +223,57 @@ public class player : KinematicBody2D
 			Node2D rotatedPlayer = this.GetRotateChild();
 			rotatedPlayer.Rotation += rotatedPlayer.Transform.y.AngleTo(_velocity);
         }
+    }
+
+    private bool ChangeState(state newState)
+    {
+        if (GetCurrentState() == state.COMBO)
+        {
+            // if it's a valid combo, transition, check for cycle
+            if (_validCombos[GetPreviousState()].Contains(newState))
+            {
+                AddState(newState);
+                if(_swordCombos.Contains(_stateHistory))
+                {
+                    ChangeSwordFlow(3);
+                }
+                else if (_shieldCombos.Contains(_stateHistory))
+                {
+                    ChangeShieldFlow(3);
+                }
+                else if (_bootsCombos.Contains(_stateHistory))
+                {
+                    ChangeBootsFlow(3);
+                }
+                return true;
+            }
+            // if not a valid combo trip
+            else
+            {
+                AddState(state.TRIP);
+                return false;
+            }
+
+        }
+        // attacks must all go to combo
+        if (_attacks.Contains(GetCurrentState()) && newState == state.COMBO)
+        {
+            AddState(newState);
+            return true;
+        }
+        // trips must go back to idle
+        if (GetCurrentState() == state.TRIP && newState == state.IDLE)
+        {
+            AddState(newState);
+            return true;
+        }
+        // from idle must go to an attack
+        if (GetCurrentState() == state.IDLE && _attacks.Contains(newState))
+        {
+            AddState(newState);
+            return true;
+        }
+        return false;
     }
 
 	private Node2D GetRotateChild() {
@@ -165,7 +290,47 @@ public class player : KinematicBody2D
 
     private void ChangeHealth(int delta)
     {
-        _player_health += delta;
-        this.EmitSignal(nameof(HealthChanged), _player_health);
+        _playerHealth += delta;
+        this.EmitSignal(nameof(HealthChanged), _playerHealth);
+    }
+
+    private void ChangeSwordFlow(int delta)
+    {
+        
+        _swordFlow = Mathf.Clamp(_swordFlow + delta, 0, 100);
+        this.EmitSignal(nameof(SwordFlowChanged), _swordFlow);
+    }
+
+    private void ChangeShieldFlow(int delta)
+    {
+        _shieldFlow = Mathf.Clamp(_shieldFlow + delta, 0, 100);
+        this.EmitSignal(nameof(ShieldFlowChanged), _shieldFlow);
+    }
+
+    private void ChangeBootsFlow(int delta)
+    {
+        _bootsFlow = Mathf.Clamp(_bootsFlow + delta, 0, 100);
+        this.EmitSignal(nameof(BootsFlowChanged), _bootsFlow);
+    }
+
+    private void AddState(state state)
+    {
+        // Rightmost element is most recent, so shift elements left one
+        _stateHistory[0] = _stateHistory[1];
+        _stateHistory[1] = _stateHistory[2];
+        _stateHistory[2] = _stateHistory[3];
+        _stateHistory[3] = _stateHistory[4];
+        // Add New State on Right
+        _stateHistory[4] = state;
+    }
+
+    private state GetCurrentState()
+    {
+        return _stateHistory[4];
+    }
+
+    private state GetPreviousState()
+    {
+        return _stateHistory[3];
     }
 }
