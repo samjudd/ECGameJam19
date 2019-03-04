@@ -284,7 +284,10 @@ public class player : KinematicBody2D
     {
         if (body.GetGroups().Contains("enemies"))
         {
-            ChangeHealth(-10);
+			if (body is enemy) {
+				((enemy)body).Knockback(this);
+			}
+            ChangeHealth(-1);
         }
     }
 
