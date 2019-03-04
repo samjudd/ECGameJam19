@@ -1,17 +1,12 @@
-using Godot;
+    using Godot;
 using System;
 
 public class menu : MarginContainer
 {
-    // Member variables here, example:
-    // private int a = 2;
-    // private string b = "textvar";
-
     public override void _Ready()
     {
-        // Called every time the node is added to the scene.
-        // Initialization here
-        
+        ((Button)this.GetNode("VBoxContainer/HBoxContainer/MarginContainer/TutorialButton")).Connect("pressed", this, nameof(OnTutorialButtonPressed));
+        ((Button)this.GetNode("VBoxContainer/HBoxContainer/MarginContainer2/CreditsButton")).Connect("pressed", this, nameof(OnCreditsButtonPressed));
     }
 
     public override void _Process(float delta)
@@ -22,6 +17,15 @@ public class menu : MarginContainer
         {
 			GetTree().ChangeScene("res://game.tscn");
         }
-        
+    }
+
+    private void OnTutorialButtonPressed()
+    {
+        GetTree().ChangeScene("res://tutorial.tscn");
+    }
+
+    private void OnCreditsButtonPressed()
+    {
+        GetTree().ChangeScene("res://credits.tscn");
     }
 }

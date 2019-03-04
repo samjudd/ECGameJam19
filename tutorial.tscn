@@ -1,0 +1,160 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://tutorial.cs" type="Script" id=1]
+[ext_resource path="res://fonts/Comfortaa-Bold.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://sprites/cyclediagram.png" type="Texture" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+
+size = 20
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 2 )
+_sections_unfolded = [ "Font", "Settings" ]
+
+[node name="tutorial" type="MarginContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 1280.0
+margin_bottom = 720.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+script = ExtResource( 1 )
+_sections_unfolded = [ "Rect", "custom_constants" ]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 1260.0
+margin_bottom = 700.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 20
+alignment = 0
+_sections_unfolded = [ "custom_constants" ]
+
+[node name="InstructionTextCenter" type="CenterContainer" parent="VBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 1240.0
+margin_bottom = 205.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+use_top_left = false
+
+[node name="Label" type="Label" parent="VBoxContainer/InstructionTextCenter" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 20.0
+margin_right = 1220.0
+margin_bottom = 205.0
+rect_min_size = Vector2( 1200, 0 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 1 )
+text = "The object of this game is to survive as long as you can while fighting using cycles. You play as a warrior with six attacks that form three cycles, shown in the image below. In order to fight most effectively, you must have your attacks flow within and through the cycles, as depicted in the image below. From each move, the arrows point to the moves that maintain the cycle. Use the arrow keys to move and the boxed letters to execute the move. If the move is not in cycle, you will trip, and be unable to attack for a second while you recover. Once you complete a cycle, that move and every move after will build flow of the type of that cycle. Sword flow will increase your damage, shield flow will reduce your damage taken, and green flow will increase your move speed. But beware, your flow is always decaying, so be sure to keep swapping cycles to keep your power at its max. Happy fighting!"
+autowrap = true
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect", "custom_colors", "custom_fonts" ]
+
+[node name="CycleDiagramCenter" type="CenterContainer" parent="VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 225.0
+margin_right = 1240.0
+margin_bottom = 610.0
+rect_min_size = Vector2( 300, 300 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+use_top_left = false
+_sections_unfolded = [ "Grow Direction", "Size Flags" ]
+
+[node name="CycleDiagram" type="TextureRect" parent="VBoxContainer/CycleDiagramCenter" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 418.0
+margin_top = 41.0
+margin_right = 821.0
+margin_bottom = 343.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+texture = ExtResource( 3 )
+stretch_mode = 0
+
+[node name="Button" type="Button" parent="VBoxContainer" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 630.0
+margin_right = 100.0
+margin_bottom = 680.0
+rect_min_size = Vector2( 100, 50 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Back"
+flat = false
+align = 1
+_sections_unfolded = [ "Rect", "Size Flags" ]
+
+
