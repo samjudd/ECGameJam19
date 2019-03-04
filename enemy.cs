@@ -4,48 +4,55 @@ using System;
 public class enemy : KinematicBody2D
 {
     private int speed = 100;
-	private int knockbackSpeed = 1000;
-	private int _health = 70;
+		private int knockbackSpeed = 1000;
+		private int _health = 70;
+		private player _player;
 
     public override void _Ready()
     {
-		// connect to area entered signal
-		this.GetNode("Area2D").Connect("area_entered", this, nameof(OnAreaEntered));
+			// connect to area entered signal
+			this.GetNode("Area2D").Connect("area_entered", this, nameof(OnAreaEntered));
+			// get reference to player
+			_player = (player)GetNode("../player");
     }
 
     public override void _Process(float delta)
     {
-		if (_health <= 0) {
-			QueueFree();
-			return;
-		}
-		KinematicBody2D player = (KinematicBody2D)GetParent().GetNode("player");
-		Vector2 directionToPlayer = (player.Position - this.Position).Normalized();
-		MoveAndSlide(speed*directionToPlayer);
+			if (_health <= 0)
+			{
+				QueueFree();
+				return;
+			}
+			KinematicBody2D player = (KinematicBody2D)GetParent().GetNode("player");
+			Vector2 directionToPlayer = (player.Position - this.Position).Normalized();
+			MoveAndSlide(speed*directionToPlayer);
 
-		ColorRect healthRect = (ColorRect)GetNode("health");
-		healthRect.SetSize(new Vector2(_health, healthRect.GetSize().y));
+			ColorRect healthRect = (ColorRect)GetNode("health");
+			healthRect.SetSize(new Vector2(_health, healthRect.GetSize().y));
     }
 
     private void OnAreaEntered(Area2D area)
     {
-		if (area.GetGroups().Contains("attacks")) {
-			switch (area.Name) {
-				case "sword":
-					_health -= 10;
-					break;
-				case "spinsword":
-					_health -= 5;
-					break;
-				case "pulse":
-					_health -= 1;
-					Knockback((player)GetNode("../player"));
-					break;
+			if (area.GetGroups().Contains("attacks"))
+			{
+				float swordFlow = (float)_player.GetSwordFlow();
+				switch (area.Name) {
+					case "sword":
+						_health -= (int)Math.Round(10.0f + 40.0f * swordFlow / 100.0f);
+						break;
+					case "spinsword":
+						_health -= (int)Math.Round(5.0f + 20.0f * swordFlow / 100.0f);
+						break;
+					case "pulse":
+						_health -= (int)Math.Round(1.0f + 9.0f * swordFlow / 100.0f);
+						Knockback(_player);
+						break;
+				}
 			}
-		}
     }
 	
-	public void Knockback(player playerInstance) {
+	public void Knockback(player playerInstance)
+	{
 		Vector2 directionToPlayer = (playerInstance.Position - this.Position).Normalized();
 		MoveAndSlide(-knockbackSpeed*directionToPlayer);
 	}

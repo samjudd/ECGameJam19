@@ -14,7 +14,7 @@ public class player : KinematicBody2D
     public delegate void BootsFlowChanged(int bootsFlow);
     [Signal]
     public delegate void PlayerDied();
-    public float _speed = 75f;
+    public float _baseSpeed = 75f;
     Vector2 _velocity = new Vector2();
     enum state {IDLE, COMBO, TRIP, SWORD, SWORDSHIELD, SHIELD, SHIELDBOOTS, BOOTS, SWORDBOOTS};
     float _attackTime = 0;
@@ -92,7 +92,7 @@ public class player : KinematicBody2D
         {
             _velocity.y -= 1;
         }
-        _velocity = _velocity.Normalized() * _speed;
+        _velocity = _velocity.Normalized() * GetSpeed();
 
         // Checks for attack input, then if state is norma
         if (Input.IsActionJustPressed("sword_attack") && this.ChangeState(state.SWORD))
@@ -145,7 +145,7 @@ public class player : KinematicBody2D
                 // dash at 4x speed for 0.5 seconds with sword out
                 if (_attackTime <= 0.3)
                 {
-                    _velocity = this.GetRotateChild().Transform.y * _speed * 4.0f;
+                    _velocity = this.GetRotateChild().Transform.y * GetSpeed() * 4.0f;
                     _attackTime += delta;
                 }
                 else
@@ -179,7 +179,7 @@ public class player : KinematicBody2D
             case state.BOOTS:
                 if (_attackTime <= 0.5)
                 {
-                    _velocity = this.GetRotateChild().Transform.y * _speed * 10.0f;
+                    _velocity = this.GetRotateChild().Transform.y * GetSpeed() * 10.0f;
                     _attackTime += delta;
                 }
                 else
@@ -196,7 +196,7 @@ public class player : KinematicBody2D
 
         private void UpdateFlow(float delta)
     {
-        if (_flowTime < 1.5)
+        if (_flowTime < 1.0)
         {
             _flowTime += delta;
         }
@@ -289,6 +289,10 @@ public class player : KinematicBody2D
 
     private void ChangeHealth(int delta)
     {
+        if(delta < 0)
+        {
+            delta = (int)Math.Round((float)delta * (20.0f / (float)_shieldFlow));
+        }
         _playerHealth += delta;
         this.EmitSignal(nameof(HealthChanged), _playerHealth);
     }
@@ -343,5 +347,15 @@ public class player : KinematicBody2D
                 return true;
         }
         return false;
+    }
+
+    private float GetSpeed()
+    {
+        return _baseSpeed + _bootsFlow / 2.0f;
+    }
+
+    public int GetSwordFlow()
+    {
+        return _swordFlow;
     }
 }
