@@ -119,6 +119,11 @@ public class player : KinematicBody2D
             ((AnimationPlayer)this.GetNode("AnimationPlayer")).Play("spray_pulse_attack");
             this.Position += this.GetRotateChild().Transform.y * GetSpeed() * -2.0f;
 		}
+		else if (Input.IsActionJustPressed("swordboots_attack") && this.ChangeState(state.SWORDBOOTS))
+		{
+            ((AnimationPlayer)this.GetNode("AnimationPlayer")).Play("dash_sword_attack");
+		}
+		
 
     }
 
@@ -202,6 +207,15 @@ public class player : KinematicBody2D
                 } 
                 else if (_attackTime <= 0.6) {
 					_velocity = this.GetRotateChild().Transform.y * GetSpeed() * 2.0f;
+            		_attackTime += delta;
+				} 
+                else {
+					this.ChangeState(state.COMBO);
+				}
+				break;
+			case state.SWORDBOOTS:
+                if (_attackTime <= 0.3) {
+					_velocity = this.GetRotateChild().Transform.y * GetSpeed() * 3.0f;
             		_attackTime += delta;
 				} 
                 else {
