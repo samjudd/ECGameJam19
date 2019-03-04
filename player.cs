@@ -14,7 +14,7 @@ public class player : KinematicBody2D
     public delegate void BootsFlowChanged(int bootsFlow);
     [Signal]
     public delegate void PlayerDied();
-    public float _speed = 75f;
+    public float _baseSpeed = 75f;
     Vector2 _velocity = new Vector2();
     enum state {IDLE, COMBO, TRIP, SWORD, SWORDSHIELD, SHIELD, SHIELDBOOTS, BOOTS, SWORDBOOTS};
     float _attackTime = 0;
@@ -92,7 +92,7 @@ public class player : KinematicBody2D
         {
             _velocity.y -= 1;
         }
-        _velocity = _velocity.Normalized() * _speed;
+        _velocity = _velocity.Normalized() * GetSpeed();
 
         // Checks for attack input, then if state is norma
         if (Input.IsActionJustPressed("sword_attack") && this.ChangeState(state.SWORD))
@@ -116,7 +116,7 @@ public class player : KinematicBody2D
         }
 		else if (Input.IsActionJustPressed("bootsshield_attack") && GetCurrentState() == state.IDLE && this.ChangeState(state.SHIELDBOOTS))
 		{
-            this.Position = this.Position += this.GetRotateChild().Transform.y * -_speed * 5.0f;
+            this.Position = this.Position += this.GetRotateChild().Transform.y * GetSpeed() * -5.0f;
 		}
 
     }
@@ -126,38 +126,35 @@ public class player : KinematicBody2D
         switch (GetCurrentState())
         {
             case state.COMBO:
-                if (_attackTime <= 3.0)
+                if (_attackTime <= 1.5)
                 {
                     _attackTime += delta;
                 }
                 else
                 {
                     this.ChangeState(state.IDLE);
-                    _attackTime = 0;
                 }
                 break;
             case state.TRIP:
-                if (_attackTime <= 0.5)
+                if (_attackTime <= 1.0)
                 {
                     _attackTime += delta;
                 }
                 else
                 {
                     this.ChangeState(state.IDLE);
-                    _attackTime = 0;
                 }
                 break;
             case state.SWORD:
                 // dash at 4x speed for 0.5 seconds with sword out
                 if (_attackTime <= 0.3)
                 {
-                    _velocity = this.GetRotateChild().Transform.y * _speed * 4.0f;
+                    _velocity = this.GetRotateChild().Transform.y * GetSpeed() * 4.0f;
                     _attackTime += delta;
                 }
                 else
                 {
                     this.ChangeState(state.COMBO);
-                    _attackTime = 0;
                     _velocity = new Vector2();
                 }
                 break;
@@ -170,7 +167,6 @@ public class player : KinematicBody2D
                 else
                 {
                     this.ChangeState(state.COMBO);
-                    _attackTime = 0;
                 }
                 break;
             case state.SWORDSHIELD:
@@ -182,19 +178,17 @@ public class player : KinematicBody2D
                 else
                 {
                     this.ChangeState(state.COMBO);
-                    _attackTime = 0;
                 }
                 break;
             case state.BOOTS:
                 if (_attackTime <= 0.5)
                 {
-                    _velocity = this.GetRotateChild().Transform.y * _speed * 10.0f;
+                    _velocity = this.GetRotateChild().Transform.y * GetSpeed() * 10.0f;
                     _attackTime += delta;
                 }
                 else
                 {
                     this.ChangeState(state.COMBO);
-                    _attackTime = 0;
                     _target = new Vector2();
                     ((Area2D)this.GetNode("Area2D")).Monitoring = true;
 					SetCollisionLayerBit(0, true);
@@ -208,7 +202,7 @@ public class player : KinematicBody2D
 				if (_attackTime <= 0.3) {
                 	_attackTime += delta;
                 } else if (_attackTime <= 0.6) {
-					_velocity = this.GetRotateChild().Transform.y * _speed * 2.0f;
+					_velocity = this.GetRotateChild().Transform.y * GetSpeed() * 2.0f;
             		_attackTime += delta;
 				} else {
 					this.ChangeState(state.COMBO);
@@ -220,7 +214,7 @@ public class player : KinematicBody2D
 
         private void UpdateFlow(float delta)
     {
-        if (_flowTime < 1.5)
+        if (_flowTime < 1.0)
         {
             _flowTime += delta;
         }
@@ -269,6 +263,7 @@ public class player : KinematicBody2D
             else
             {
                 AddState(state.TRIP);
+                ((Sprite)this.GetNode("tripMask")).Visible = true;
                 return false;
             }
 
@@ -283,6 +278,7 @@ public class player : KinematicBody2D
         if (GetCurrentState() == state.TRIP && newState == state.IDLE)
         {
             AddState(newState);
+            ((Sprite)this.GetNode("tripMask")).Visible = false;
             return true;
         }
         // from idle must go to an attack
@@ -311,6 +307,10 @@ public class player : KinematicBody2D
 
     private void ChangeHealth(int delta)
     {
+        if(delta < 0)
+        {
+            delta = (int)Math.Round((float)delta * (20.0f / (float)_shieldFlow));
+        }
         _playerHealth += delta;
         this.EmitSignal(nameof(HealthChanged), _playerHealth);
     }
@@ -343,6 +343,8 @@ public class player : KinematicBody2D
         _stateHistory[3] = _stateHistory[4];
         // Add New State on Right
         _stateHistory[4] = state;
+        // zero attack time anytime the state changes
+        _attackTime = 0;
     }
 
     private state GetCurrentState()
@@ -363,5 +365,15 @@ public class player : KinematicBody2D
                 return true;
         }
         return false;
+    }
+
+    private float GetSpeed()
+    {
+        return _baseSpeed + _bootsFlow / 2.0f;
+    }
+
+    public int GetSwordFlow()
+    {
+        return _swordFlow;
     }
 }
