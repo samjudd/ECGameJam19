@@ -122,25 +122,23 @@ public class player : KinematicBody2D
         switch (GetCurrentState())
         {
             case state.COMBO:
-                if (_attackTime <= 3.0)
+                if (_attackTime <= 1.5)
                 {
                     _attackTime += delta;
                 }
                 else
                 {
                     this.ChangeState(state.IDLE);
-                    _attackTime = 0;
                 }
                 break;
             case state.TRIP:
-                if (_attackTime <= 0.5)
+                if (_attackTime <= 1.0)
                 {
                     _attackTime += delta;
                 }
                 else
                 {
                     this.ChangeState(state.IDLE);
-                    _attackTime = 0;
                 }
                 break;
             case state.SWORD:
@@ -153,7 +151,6 @@ public class player : KinematicBody2D
                 else
                 {
                     this.ChangeState(state.COMBO);
-                    _attackTime = 0;
                     _velocity = new Vector2();
                 }
                 break;
@@ -166,7 +163,6 @@ public class player : KinematicBody2D
                 else
                 {
                     this.ChangeState(state.COMBO);
-                    _attackTime = 0;
                 }
                 break;
             case state.SWORDSHIELD:
@@ -178,7 +174,6 @@ public class player : KinematicBody2D
                 else
                 {
                     this.ChangeState(state.COMBO);
-                    _attackTime = 0;
                 }
                 break;
             case state.BOOTS:
@@ -190,7 +185,6 @@ public class player : KinematicBody2D
                 else
                 {
                     this.ChangeState(state.COMBO);
-                    _attackTime = 0;
                     _target = new Vector2();
                     ((Area2D)this.GetNode("Area2D")).Monitoring = true;
 					SetCollisionLayerBit(0, true);
@@ -251,6 +245,7 @@ public class player : KinematicBody2D
             else
             {
                 AddState(state.TRIP);
+                ((Sprite)this.GetNode("tripMask")).Visible = true;
                 return false;
             }
 
@@ -265,6 +260,7 @@ public class player : KinematicBody2D
         if (GetCurrentState() == state.TRIP && newState == state.IDLE)
         {
             AddState(newState);
+            ((Sprite)this.GetNode("tripMask")).Visible = false;
             return true;
         }
         // from idle must go to an attack
@@ -325,6 +321,8 @@ public class player : KinematicBody2D
         _stateHistory[3] = _stateHistory[4];
         // Add New State on Right
         _stateHistory[4] = state;
+        // zero attack time anytime the state changes
+        _attackTime = 0;
     }
 
     private state GetCurrentState()
