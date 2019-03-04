@@ -20,6 +20,7 @@ public class enemy : KinematicBody2D
     {
 			if (_health <= 0)
 			{
+				((game)this.GetNode("../..")).EnemyDead();	
 				QueueFree();
 				return;
 			}
@@ -48,11 +49,12 @@ public class enemy : KinematicBody2D
 						Knockback(_player);
 						break;
 					case "spray_pulse":
-						_health -= 2;
+						_health -= (int)Math.Round(2.0f + 13.0f * swordFlow / 100.0f);
 						Knockback(_player);
 						break;
-
-
+					case "dash_sword":
+						_health -= (int)Math.Round(7.0f + 33.0f * swordFlow / 100.0f);
+						break;
 				}
 			}
     }

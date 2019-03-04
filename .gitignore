@@ -9,3 +9,6 @@ export_presets.cfg
 # Benji-specific ignores
 .ignore/
 
+# Build Ignores
+*.exe
+*.pck

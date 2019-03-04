@@ -12,8 +12,6 @@ public class player : KinematicBody2D
     public delegate void ShieldFlowChanged(int shieldFlow);
     [Signal]
     public delegate void BootsFlowChanged(int bootsFlow);
-    [Signal]
-    public delegate void PlayerDied();
     public float _baseSpeed = 75f;
     Vector2 _velocity = new Vector2();
     enum state {IDLE, COMBO, TRIP, SWORD, SWORDSHIELD, SHIELD, SHIELDBOOTS, BOOTS, SWORDBOOTS};
