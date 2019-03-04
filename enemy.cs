@@ -47,6 +47,12 @@ public class enemy : KinematicBody2D
 						_health -= (int)Math.Round(1.0f + 9.0f * swordFlow / 100.0f);
 						Knockback(_player);
 						break;
+					case "spray_pulse":
+                        _health -= 2;
+                        Knockback((player)GetNode("../player"));
+                        break;
+
+
 				}
 			}
     }
