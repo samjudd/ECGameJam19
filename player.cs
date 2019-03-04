@@ -27,7 +27,7 @@ public class player : KinematicBody2D
     private int _bootsFlow = 0;
     private state[] _stateHistory = new state[5] {state.IDLE, state.IDLE, state.IDLE, state.IDLE, state.IDLE};
     private state[] _attacks = new state[6] {state.SWORD, state.SWORDSHIELD, state.SHIELD, state.SHIELDBOOTS, state.BOOTS, state.SWORDBOOTS};
-    private Dictionary<state, state[]> _validCombos = new Dictionary<state, state[]>()
+    private Dictionary<state, state[]> _validTransitions = new Dictionary<state, state[]>()
     {
         {state.SWORD, new state[]{state.SWORDSHIELD, state.IDLE}},
         {state.SWORDSHIELD, new state[]{state.SHIELD, state.SWORDBOOTS, state.IDLE}},
@@ -202,7 +202,7 @@ public class player : KinematicBody2D
 
         private void UpdateFlow(float delta)
     {
-        if (_flowTime < 3.0)
+        if (_flowTime < 1.5)
         {
             _flowTime += delta;
         }
@@ -230,18 +230,18 @@ public class player : KinematicBody2D
         if (GetCurrentState() == state.COMBO)
         {
             // if it's a valid combo, transition, check for cycle
-            if (_validCombos[GetPreviousState()].Contains(newState))
+            if (_validTransitions[GetPreviousState()].Contains(newState))
             {
                 AddState(newState);
-                if(_swordCombos.Contains(_stateHistory))
+                if(CheckCombo(_swordCombos))
                 {
                     ChangeSwordFlow(3);
                 }
-                else if (_shieldCombos.Contains(_stateHistory))
+                else if (CheckCombo(_shieldCombos))
                 {
                     ChangeShieldFlow(3);
                 }
-                else if (_bootsCombos.Contains(_stateHistory))
+                else if (CheckCombo(_bootsCombos))
                 {
                     ChangeBootsFlow(3);
                 }
@@ -335,5 +335,15 @@ public class player : KinematicBody2D
     private state GetPreviousState()
     {
         return _stateHistory[3];
+    }
+
+    private bool CheckCombo(state[][] validCombos)
+    {
+        foreach (state[] combo in validCombos)
+        {
+            if (combo.SequenceEqual(_stateHistory))
+                return true;
+        }
+        return false;
     }
 }
