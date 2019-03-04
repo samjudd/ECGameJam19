@@ -114,9 +114,9 @@ public class player : KinematicBody2D
 			SetCollisionMaskBit(0, false);
             ((Area2D)this.GetNode("Area2D")).Monitoring = false;
         }
-		else if (Input.IsActionJustPressed("bootsshield_attack") && GetCurrentState() == state.IDLE && this.ChangeState(state.SHIELDBOOTS))
+		else if (Input.IsActionJustPressed("bootsshield_attack") && this.ChangeState(state.SHIELDBOOTS))
 		{
-            this.Position = this.Position += this.GetRotateChild().Transform.y * GetSpeed() * -2.0f;
+            this.Position += this.GetRotateChild().Transform.y * GetSpeed() * -2.0f;
 		}
 
     }
@@ -206,7 +206,6 @@ public class player : KinematicBody2D
             		_attackTime += delta;
 				} else {
 					this.ChangeState(state.COMBO);
-                    _attackTime = 0;
 				}
 				break;
         }
@@ -266,7 +265,6 @@ public class player : KinematicBody2D
                 ((Sprite)this.GetNode("tripMask")).Visible = true;
                 return false;
             }
-
         }
         // attacks must all go to combo
         if (_attacks.Contains(GetCurrentState()) && newState == state.COMBO)
@@ -309,7 +307,7 @@ public class player : KinematicBody2D
     {
         if(delta < 0)
         {
-            delta = (int)Math.Round((float)delta * (20.0f / (float)_shieldFlow));
+            delta = (int)Math.Round((float)delta * (1.0f - 0.8f * (float)_shieldFlow / 100.0f));
         }
         _playerHealth += delta;
         this.EmitSignal(nameof(HealthChanged), _playerHealth);

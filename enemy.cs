@@ -48,9 +48,9 @@ public class enemy : KinematicBody2D
 						Knockback(_player);
 						break;
 					case "spray_pulse":
-                        _health -= 2;
-                        Knockback((player)GetNode("../player"));
-                        break;
+						_health -= 2;
+						Knockback(_player);
+						break;
 
 
 				}

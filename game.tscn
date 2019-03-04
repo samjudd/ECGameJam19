@@ -5,7 +5,7 @@
 [ext_resource path="res://player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://testwall.tscn" type="PackedScene" id=4]
 
-[node name="game" type="Node"]
+[node name="game" type="Node" index="0"]
 
 script = ExtResource( 1 )
 
@@ -31,7 +31,7 @@ position = Vector2( 146.69, 323.051 )
 
 process_mode = 1
 wait_time = 5.0
-one_shot = false
+one_shot = true
 autostart = true
 
 
