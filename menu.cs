@@ -5,8 +5,8 @@ public class menu : MarginContainer
 {
     public override void _Ready()
     {
-        ((Button)this.GetNode("VBoxContainer/HBoxContainer/MarginContainer/TutorialButton")).Connect("pressed", this, nameof(OnTutorialButtonPressed));
-        ((Button)this.GetNode("VBoxContainer/HBoxContainer/MarginContainer2/CreditsButton")).Connect("pressed", this, nameof(OnCreditsButtonPressed));
+        ((Button)this.GetNode("VBoxContainer/HBoxContainer/TutorialButton")).Connect("pressed", this, nameof(OnTutorialButtonPressed));
+        ((Button)this.GetNode("VBoxContainer/HBoxContainer/CreditsButton")).Connect("pressed", this, nameof(OnCreditsButtonPressed));
     }
 
     public override void _Process(float delta)
