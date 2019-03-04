@@ -49,6 +49,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="credits.cs" />
     <Compile Include="enemy.cs" />
     <Compile Include="game.cs" />
     <Compile Include="GUI.cs" />
