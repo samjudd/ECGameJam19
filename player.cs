@@ -114,6 +114,10 @@ public class player : KinematicBody2D
 			SetCollisionMaskBit(0, false);
             ((Area2D)this.GetNode("Area2D")).Monitoring = false;
         }
+		else if (Input.IsActionJustPressed("bootsshield_attack") && GetCurrentState() == state.IDLE && this.ChangeState(state.SHIELDBOOTS))
+		{
+            this.Position = this.Position += this.GetRotateChild().Transform.y * -_speed * 5.0f;
+		}
 
     }
 
@@ -197,6 +201,20 @@ public class player : KinematicBody2D
 					SetCollisionMaskBit(0, true);
                 }
                 break;
+			case state.SHIELDBOOTS:
+				if (_attackTime > 0.3 && !((AnimationPlayer)this.GetNode("AnimationPlayer")).IsPlaying()) {
+					((AnimationPlayer)this.GetNode("AnimationPlayer")).Play("spray_pulse_attack");
+				}
+				if (_attackTime <= 0.3) {
+                	_attackTime += delta;
+                } else if (_attackTime <= 0.6) {
+					_velocity = this.GetRotateChild().Transform.y * _speed * 2.0f;
+            		_attackTime += delta;
+				} else {
+					this.ChangeState(state.COMBO);
+                    _attackTime = 0;
+				}
+				break;
         }
     }
 
